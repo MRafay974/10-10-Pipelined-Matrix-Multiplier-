@@ -1,0 +1,148 @@
+
+
+module matrix_mult_10(   
+    input Clock,
+    input reset,
+    input Enable,    
+    input [399:0] A,  // 10x10 matrix A ()
+    input [399:0] B,  // 10x10 matrix B ()
+    output reg [399:0] C,  // Result matrix
+    output reg done     
+);   
+
+// State machine states
+localparam IDLE = 3'd0;
+localparam LOADING = 3'd1;
+localparam COMPUTING = 3'd2;
+localparam ACCUMULATING = 3'd3;
+localparam DONE_STATE = 3'd4;
+
+// State register
+reg [2:0] current_state;
+
+// Stage 1: Input registers and matrix conversion
+reg [3:0] matA [0:9][0:9];
+reg [3:0] matB [0:9][0:9];
+
+// Stage 2: Multiplication pipeline registers
+reg [7:0] mult_results [0:9][0:9][0:9];  // Store products for each i,j,k
+reg [3:0] pipe_i, pipe_j, pipe_k;
+
+// Stage 3: Accumulation registers
+reg [7:0] acc_results [0:9][0:9];
+reg [3:0] acc_i, acc_j;
+
+integer i, j, k;
+
+// Single state machine to control all stages
+always @(posedge Clock or posedge reset) begin
+    if (reset) begin
+        current_state <= IDLE;
+        done <= 0;
+        C <= 0;
+        pipe_i <= 0;
+        pipe_j <= 0;
+        pipe_k <= 0;
+        acc_i <= 0;
+        acc_j <= 0;
+        
+        // Reset matrices
+        for (i = 0; i < 10; i = i + 1) begin
+            for (j = 0; j < 10; j = j + 1) begin
+                matA[i][j] <= 0;
+                matB[i][j] <= 0;
+                for (k = 0; k < 10; k = k + 1) begin
+                    mult_results[i][j][k] <= 0;
+                end
+                acc_results[i][j] <= 0;
+            end
+        end
+    end
+    else begin
+        case (current_state)
+            IDLE: begin
+                if (Enable) begin
+                    // Convert 1D to 2D in parallel
+                    for (i = 0; i < 10; i = i + 1) begin
+                        for (j = 0; j < 10; j = j + 1) begin
+                            matA[i][j] <= A[i*40 + j*4 +: 4];
+                            matB[i][j] <= B[i*40 + j*4 +: 4];
+                        end
+                    end
+                    current_state <= LOADING;
+                end
+            end
+
+            LOADING: begin
+                pipe_i <= 0;
+                pipe_j <= 0;
+                pipe_k <= 0;
+                current_state <= COMPUTING;
+            end
+
+            COMPUTING: begin
+                // Compute products
+                mult_results[pipe_i][pipe_j][pipe_k] <= matA[pipe_i][pipe_k] * matB[pipe_k][pipe_j];
+                
+                // Update indices
+                if (pipe_k < 9)
+                    pipe_k <= pipe_k + 1;
+                else begin
+                    pipe_k <= 0;
+                    if (pipe_j < 9)
+                        pipe_j <= pipe_j + 1;
+                    else begin
+                        pipe_j <= 0;
+                        if (pipe_i < 9)
+                            pipe_i <= pipe_i + 1;
+                        else begin
+                            current_state <= ACCUMULATING;
+                            acc_i <= 0;
+                            acc_j <= 0;
+                        end
+                    end
+                end
+            end
+
+            ACCUMULATING: begin
+                // Accumulate results
+                if (acc_i < 10 && acc_j < 10) begin
+                    acc_results[acc_i][acc_j] <= mult_results[acc_i][acc_j][0] +
+                                               mult_results[acc_i][acc_j][1] +
+                                               mult_results[acc_i][acc_j][2] +
+                                               mult_results[acc_i][acc_j][3] +
+                                               mult_results[acc_i][acc_j][4] +
+                                               mult_results[acc_i][acc_j][5] +
+                                               mult_results[acc_i][acc_j][6] +
+                                               mult_results[acc_i][acc_j][7] +
+                                               mult_results[acc_i][acc_j][8] +
+                                               mult_results[acc_i][acc_j][9];
+                    
+                    if (acc_j < 9)
+                        acc_j <= acc_j + 1;
+                    else begin
+                        acc_j <= 0;
+                        if (acc_i < 9)
+                            acc_i <= acc_i + 1;
+                        else
+                            current_state <= DONE_STATE;
+                    end
+                end
+            end
+
+            DONE_STATE: begin
+                // Convert accumulated results to output format
+                for (i = 0; i < 10; i = i + 1)
+                    for (j = 0; j < 10; j = j + 1)
+                        C[i*40 + j*4 +: 4] <= acc_results[i][j][3:0];
+                
+                done <= 1;
+                current_state <= IDLE;
+            end
+        endcase
+    end
+end
+
+endmodule
+
+

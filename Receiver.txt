@@ -1,0 +1,498 @@
+
+
+module uartrx
+(
+  input clk,
+  input rst,
+  input rx,
+  output reg done,
+  output reg [7:0] rxdata,
+  output reg [399:0] all_data1 , // New register to hold the full 32-bit data
+  output reg [399:0] all_data2 , // New register to hold the full 32-bit data
+  output reg all_done
+
+);
+
+  // State parameters
+  parameter IDLE  = 2'b00;
+  parameter START = 2'b01;
+
+  integer counts = 0;
+  reg [1:0] state = IDLE;  // Initialize state using parameter
+  wire bclk;
+
+  // Counter to track where to store in all_data (each byte will be stored 8 bits at a time)
+  integer byte_count1 = 0;
+
+
+  // Instantiate the baud rate generator
+  br #(.BAUD(9600)) u_br (
+   .clk(clk),    // Connect the system clock (100 MHz)
+   .rst(rst),    // Connect the reset signal
+    .bclk(bclk)   // Connect the output baud clock
+  );
+
+  // State Machine for UART Reception
+  always @(posedge bclk) begin
+    if (rst) begin
+      rxdata <= 8'd0;
+      all_data1 <= 400'd0;  // Reset all_data register
+		      all_data2 <= 400'd0;  // Reset all_data register
+
+      counts <= 0;
+      byte_count1 <= 0;     // Reset byte counter
+      done <= 1'b0;
+		all_done<=1'b0;
+      state <= IDLE;       // Reset to IDLE state
+    end
+    else begin
+      case (state)
+        IDLE: begin
+          rxdata <= 8'h00;
+          counts <= 0;
+          done <= 1'b0;
+
+          if (rx == 1'b0)
+            state <= START;
+          else
+            state <= IDLE;
+        end
+
+        START: begin
+          if (counts <= 7) begin
+            counts <= counts + 1;
+            rxdata <= {rx, rxdata[7:1]};  // Shift the received bits
+          end
+          else begin
+            counts <= 0;
+            done <= 1'b1;
+
+            // Store rxdata into all_data 8 bits at a time
+      case (byte_count1)
+    0: begin
+        all_data1[3:0]   <= rxdata[3:0];     // Store lower 4 bits (bits 0-3)
+        all_data1[7:4]   <= rxdata[7:4];     // Store upper 4 bits (bits 4-7)
+    end
+    1: begin
+        all_data1[11:8]  <= rxdata[3:0];     // Store lower 4 bits (bits 8-11)
+        all_data1[15:12] <= rxdata[7:4];     // Store upper 4 bits (bits 12-15)
+    end
+    2: begin
+        all_data1[19:16] <= rxdata[3:0];     // Store lower 4 bits (bits 16-19)
+        all_data1[23:20] <= rxdata[7:4];     // Store upper 4 bits (bits 20-23)
+    end
+    3: begin
+        all_data1[27:24] <= rxdata[3:0];     // Store lower 4 bits (bits 24-27)
+        all_data1[31:28] <= rxdata[7:4];     // Store upper 4 bits (bits 28-31)
+    end
+    4: begin
+        all_data1[35:32] <= rxdata[3:0];     // Store lower 4 bits (bits 32-35)
+        all_data1[39:36] <= rxdata[7:4];     // Store upper 4 bits (bits 36-39)
+    end
+    5: begin
+        all_data1[43:40] <= rxdata[3:0];     // Store lower 4 bits (bits 40-43)
+        all_data1[47:44] <= rxdata[7:4];     // Store upper 4 bits (bits 44-47)
+    end
+    6: begin
+        all_data1[51:48] <= rxdata[3:0];     // Store lower 4 bits (bits 48-51)
+        all_data1[55:52] <= rxdata[7:4];     // Store upper 4 bits (bits 52-55)
+    end
+    7: begin
+        all_data1[59:56] <= rxdata[3:0];     // Store lower 4 bits (bits 56-59)
+        all_data1[63:60] <= rxdata[7:4];     // Store upper 4 bits (bits 60-63)
+    end
+    8: begin
+        all_data1[67:64] <= rxdata[3:0];     // Store lower 4 bits (bits 64-67)
+        all_data1[71:68] <= rxdata[7:4];     // Store upper 4 bits (bits 68-71)
+    end
+    9: begin
+        all_data1[75:72] <= rxdata[3:0];     // Store lower 4 bits (bits 72-75)
+        all_data1[79:76] <= rxdata[7:4];     // Store upper 4 bits (bits 76-79)
+    end
+    10: begin
+        all_data1[83:80] <= rxdata[3:0];     // Store lower 4 bits (bits 80-83)
+        all_data1[87:84] <= rxdata[7:4];     // Store upper 4 bits (bits 84-87)
+    end
+    11: begin
+        all_data1[91:88] <= rxdata[3:0];     // Store lower 4 bits (bits 88-91)
+        all_data1[95:92] <= rxdata[7:4];     // Store upper 4 bits (bits 92-95)
+    end
+    12: begin
+        all_data1[99:96] <= rxdata[3:0];     // Store lower 4 bits (bits 96-99)
+        all_data1[103:100] <= rxdata[7:4];   // Store upper 4 bits (bits 100-103)
+    end
+    13: begin
+        all_data1[107:104] <= rxdata[3:0];   // Store lower 4 bits (bits 104-107)
+        all_data1[111:108] <= rxdata[7:4];   // Store upper 4 bits (bits 108-111)
+    end
+    14: begin
+        all_data1[115:112] <= rxdata[3:0];   // Store lower 4 bits (bits 112-115)
+        all_data1[119:116] <= rxdata[7:4];   // Store upper 4 bits (bits 116-119)
+    end
+    15: begin
+        all_data1[123:120] <= rxdata[3:0];   // Store lower 4 bits (bits 120-123)
+        all_data1[127:124] <= rxdata[7:4];   // Store upper 4 bits (bits 124-127)
+    end
+    16: begin
+        all_data1[131:128] <= rxdata[3:0];   // Store lower 4 bits (bits 128-131)
+        all_data1[135:132] <= rxdata[7:4];   // Store upper 4 bits (bits 132-135)
+    end
+    17: begin
+        all_data1[139:136] <= rxdata[3:0];   // Store lower 4 bits (bits 136-139)
+        all_data1[143:140] <= rxdata[7:4];   // Store upper 4 bits (bits 140-143)
+    end
+    18: begin
+        all_data1[147:144] <= rxdata[3:0];   // Store lower 4 bits (bits 144-147)
+        all_data1[151:148] <= rxdata[7:4];   // Store upper 4 bits (bits 148-151)
+    end
+    19: begin
+        all_data1[155:152] <= rxdata[3:0];   // Store lower 4 bits (bits 152-155)
+        all_data1[159:156] <= rxdata[7:4];   // Store upper 4 bits (bits 156-159)
+    end
+    20: begin
+        all_data1[163:160] <= rxdata[3:0];   // Store lower 4 bits (bits 160-163)
+        all_data1[167:164] <= rxdata[7:4];   // Store upper 4 bits (bits 164-167)
+    end
+    21: begin
+        all_data1[171:168] <= rxdata[3:0];   // Store lower 4 bits (bits 168-171)
+        all_data1[175:172] <= rxdata[7:4];   // Store upper 4 bits (bits 172-175)
+    end
+    22: begin
+        all_data1[179:176] <= rxdata[3:0];   // Store lower 4 bits (bits 176-179)
+        all_data1[183:180] <= rxdata[7:4];   // Store upper 4 bits (bits 180-183)
+    end
+    23: begin
+        all_data1[187:184] <= rxdata[3:0];   // Store lower 4 bits (bits 184-187)
+        all_data1[191:188] <= rxdata[7:4];   // Store upper 4 bits (bits 188-191)
+    end
+    24: begin
+        all_data1[195:192] <= rxdata[3:0];   // Store lower 4 bits (bits 192-195)
+        all_data1[199:196] <= rxdata[7:4];   // Store upper 4 bits (bits 196-199)
+    end
+    25: begin
+        all_data1[203:200] <= rxdata[3:0];   // Store lower 4 bits (bits 200-203)
+        all_data1[207:204] <= rxdata[7:4];   // Store upper 4 bits (bits 204-207)
+    end
+    26: begin
+        all_data1[211:208] <= rxdata[3:0];   // Store lower 4 bits (bits 208-211)
+        all_data1[215:212] <= rxdata[7:4];   // Store upper 4 bits (bits 212-215)
+    end
+    27: begin
+        all_data1[219:216] <= rxdata[3:0];   // Store lower 4 bits (bits 216-219)
+        all_data1[223:220] <= rxdata[7:4];   // Store upper 4 bits (bits 220-223)
+    end
+    28: begin
+        all_data1[227:224] <= rxdata[3:0];   // Store lower 4 bits (bits 224-227)
+        all_data1[231:228] <= rxdata[7:4];   // Store upper 4 bits (bits 228-231)
+    end
+    29: begin
+        all_data1[235:232] <= rxdata[3:0];   // Store lower 4 bits (bits 232-235)
+        all_data1[239:236] <= rxdata[7:4];   // Store upper 4 bits (bits 236-239)
+    end
+    30: begin
+        all_data1[243:240] <= rxdata[3:0];   // Store lower 4 bits (bits 240-243)
+        all_data1[247:244] <= rxdata[7:4];   // Store upper 4 bits (bits 244-247)
+    end
+    31: begin
+        all_data1[251:248] <= rxdata[3:0];   // Store lower 4 bits (bits 248-251)
+        all_data1[255:252] <= rxdata[7:4];   // Store upper 4 bits (bits 252-255)
+    end
+    32: begin
+        all_data1[259:256] <= rxdata[3:0];   // Store lower 4 bits (bits 256-259)
+        all_data1[263:260] <= rxdata[7:4];   // Store upper 4 bits (bits 260-263)
+    end
+    33: begin
+        all_data1[267:264] <= rxdata[3:0];   // Store lower 4 bits (bits 264-267)
+        all_data1[271:268] <= rxdata[7:4];   // Store upper 4 bits (bits 268-271)
+    end
+    34: begin
+        all_data1[275:272] <= rxdata[3:0];   // Store lower 4 bits (bits 272-275)
+        all_data1[279:276] <= rxdata[7:4];   // Store upper 4 bits (bits 276-279)
+    end
+    35: begin
+        all_data1[283:280] <= rxdata[3:0];   // Store lower 4 bits (bits 280-283)
+        all_data1[287:284] <= rxdata[7:4];   // Store upper 4 bits (bits 284-287)
+    end
+    36: begin
+        all_data1[291:288] <= rxdata[3:0];   // Store lower 4 bits (bits 288-291)
+        all_data1[295:292] <= rxdata[7:4];   // Store upper 4 bits (bits 292-295)
+    end
+    37: begin
+        all_data1[299:296] <= rxdata[3:0];   // Store lower 4 bits (bits 296-299)
+        all_data1[303:300] <= rxdata[7:4];   // Store upper 4 bits (bits 300-303)
+    end
+    38: begin
+        all_data1[307:304] <= rxdata[3:0];   // Store lower 4 bits (bits 304-307)
+        all_data1[311:308] <= rxdata[7:4];   // Store upper 4 bits (bits 308-311)
+    end
+    39: begin
+        all_data1[315:312] <= rxdata[3:0];   // Store lower 4 bits (bits 312-315)
+        all_data1[319:316] <= rxdata[7:4];   // Store upper 4 bits (bits 316-319)
+    end
+    40: begin
+        all_data1[323:320] <= rxdata[3:0];   // Store lower 4 bits (bits 320-323)
+        all_data1[327:324] <= rxdata[7:4];   // Store upper 4 bits (bits 324-327)
+    end
+    41: begin
+        all_data1[331:328] <= rxdata[3:0];   // Store lower 4 bits (bits 328-331)
+        all_data1[335:332] <= rxdata[7:4];   // Store upper 4 bits (bits 332-335)
+    end
+    42: begin
+        all_data1[339:336] <= rxdata[3:0];   // Store lower 4 bits (bits 336-339)
+        all_data1[343:340] <= rxdata[7:4];   // Store upper 4 bits (bits 340-343)
+    end
+    43: begin
+        all_data1[347:344] <= rxdata[3:0];   // Store lower 4 bits (bits 344-347)
+        all_data1[351:348] <= rxdata[7:4];   // Store upper 4 bits (bits 348-351)
+    end
+    44: begin
+        all_data1[355:352] <= rxdata[3:0];   // Store lower 4 bits (bits 352-355)
+        all_data1[359:356] <= rxdata[7:4];   // Store upper 4 bits (bits 356-359)
+    end
+    45: begin
+        all_data1[363:360] <= rxdata[3:0];   // Store lower 4 bits (bits 360-363)
+        all_data1[367:364] <= rxdata[7:4];   // Store upper 4 bits (bits 364-367)
+    end
+    46: begin
+        all_data1[371:368] <= rxdata[3:0];   // Store lower 4 bits (bits 368-371)
+        all_data1[375:372] <= rxdata[7:4];   // Store upper 4 bits (bits 372-375)
+    end
+    47: begin
+        all_data1[379:376] <= rxdata[3:0];   // Store lower 4 bits (bits 376-379)
+        all_data1[383:380] <= rxdata[7:4];   // Store upper 4 bits (bits 380-383)
+    end
+    48: begin
+        all_data1[387:384] <= rxdata[3:0];   // Store lower 4 bits (bits 384-387)
+        all_data1[391:388] <= rxdata[7:4];   // Store upper 4 bits (bits 388-391)
+    end
+    49: begin
+        all_data1[395:392] <= rxdata[3:0];   // Store lower 4 bits (bits 392-395)
+        all_data1[399:396] <= rxdata[7:4];   // Store upper 4 bits (bits 396-399)
+    end
+   50: begin
+        all_data2[3:0]   <= rxdata[3:0];     // Store lower 4 bits (bits 0-3)
+        all_data2[7:4]   <= rxdata[7:4];     // Store upper 4 bits (bits 4-7)
+    end
+    51: begin
+        all_data2[11:8]  <= rxdata[3:0];     // Store lower 4 bits (bits 8-11)
+        all_data2[15:12] <= rxdata[7:4];     // Store upper 4 bits (bits 12-15)
+    end
+    52: begin
+        all_data2[19:16] <= rxdata[3:0];     // Store lower 4 bits (bits 16-19)
+        all_data2[23:20] <= rxdata[7:4];     // Store upper 4 bits (bits 20-23)
+    end
+    53: begin
+        all_data2[27:24] <= rxdata[3:0];     // Store lower 4 bits (bits 24-27)
+        all_data2[31:28] <= rxdata[7:4];     // Store upper 4 bits (bits 28-31)
+    end
+    54: begin
+        all_data2[35:32] <= rxdata[3:0];     // Store lower 4 bits (bits 32-35)
+        all_data2[39:36] <= rxdata[7:4];     // Store upper 4 bits (bits 36-39)
+    end
+    55: begin
+        all_data2[43:40] <= rxdata[3:0];     // Store lower 4 bits (bits 40-43)
+        all_data2[47:44] <= rxdata[7:4];     // Store upper 4 bits (bits 44-47)
+    end
+    56: begin
+        all_data2[51:48] <= rxdata[3:0];     // Store lower 4 bits (bits 48-51)
+        all_data2[55:52] <= rxdata[7:4];     // Store upper 4 bits (bits 52-55)
+    end
+    57: begin
+        all_data2[59:56] <= rxdata[3:0];     // Store lower 4 bits (bits 56-59)
+        all_data2[63:60] <= rxdata[7:4];     // Store upper 4 bits (bits 60-63)
+    end
+    58: begin
+        all_data2[67:64] <= rxdata[3:0];     // Store lower 4 bits (bits 64-67)
+        all_data2[71:68] <= rxdata[7:4];     // Store upper 4 bits (bits 68-71)
+    end
+    59: begin
+        all_data2[75:72] <= rxdata[3:0];     // Store lower 4 bits (bits 72-75)
+        all_data2[79:76] <= rxdata[7:4];     // Store upper 4 bits (bits 76-79)
+    end
+    60: begin
+        all_data2[83:80] <= rxdata[3:0];     // Store lower 4 bits (bits 80-83)
+        all_data2[87:84] <= rxdata[7:4];     // Store upper 4 bits (bits 84-87)
+    end
+    61: begin
+        all_data2[91:88] <= rxdata[3:0];     // Store lower 4 bits (bits 88-91)
+        all_data2[95:92] <= rxdata[7:4];     // Store upper 4 bits (bits 92-95)
+    end
+    62: begin
+        all_data2[99:96] <= rxdata[3:0];     // Store lower 4 bits (bits 96-99)
+        all_data2[103:100] <= rxdata[7:4];   // Store upper 4 bits (bits 100-103)
+    end
+    63: begin
+        all_data2[107:104] <= rxdata[3:0];   // Store lower 4 bits (bits 104-107)
+        all_data2[111:108] <= rxdata[7:4];   // Store upper 4 bits (bits 108-111)
+    end
+    64: begin
+        all_data2[115:112] <= rxdata[3:0];   // Store lower 4 bits (bits 112-115)
+        all_data2[119:116] <= rxdata[7:4];   // Store upper 4 bits (bits 116-119)
+    end
+    65: begin
+        all_data2[123:120] <= rxdata[3:0];   // Store lower 4 bits (bits 120-123)
+        all_data2[127:124] <= rxdata[7:4];   // Store upper 4 bits (bits 124-127)
+    end
+    66: begin
+        all_data2[131:128] <= rxdata[3:0];   // Store lower 4 bits (bits 128-131)
+        all_data2[135:132] <= rxdata[7:4];   // Store upper 4 bits (bits 132-135)
+    end
+    67: begin
+        all_data2[139:136] <= rxdata[3:0];   // Store lower 4 bits (bits 136-139)
+        all_data2[143:140] <= rxdata[7:4];   // Store upper 4 bits (bits 140-143)
+    end
+    68: begin
+        all_data2[147:144] <= rxdata[3:0];   // Store lower 4 bits (bits 144-147)
+        all_data2[151:148] <= rxdata[7:4];   // Store upper 4 bits (bits 148-151)
+    end
+    69: begin
+        all_data2[155:152] <= rxdata[3:0];   // Store lower 4 bits (bits 152-155)
+        all_data2[159:156] <= rxdata[7:4];   // Store upper 4 bits (bits 156-159)
+    end
+    70: begin
+        all_data2[163:160] <= rxdata[3:0];   // Store lower 4 bits (bits 160-163)
+        all_data2[167:164] <= rxdata[7:4];   // Store upper 4 bits (bits 164-167)
+    end
+    71: begin
+        all_data2[171:168] <= rxdata[3:0];   // Store lower 4 bits (bits 168-171)
+        all_data2[175:172] <= rxdata[7:4];   // Store upper 4 bits (bits 172-175)
+    end
+    72: begin
+        all_data2[179:176] <= rxdata[3:0];   // Store lower 4 bits (bits 176-179)
+        all_data2[183:180] <= rxdata[7:4];   // Store upper 4 bits (bits 180-183)
+    end
+    73: begin
+        all_data2[187:184] <= rxdata[3:0];   // Store lower 4 bits (bits 184-187)
+        all_data2[191:188] <= rxdata[7:4];   // Store upper 4 bits (bits 188-191)
+    end
+    74: begin
+        all_data2[195:192] <= rxdata[3:0];   // Store lower 4 bits (bits 192-195)
+        all_data2[199:196] <= rxdata[7:4];   // Store upper 4 bits (bits 196-199)
+    end
+    75: begin
+        all_data2[203:200] <= rxdata[3:0];   // Store lower 4 bits (bits 200-203)
+        all_data2[207:204] <= rxdata[7:4];   // Store upper 4 bits (bits 204-207)
+    end
+    76: begin
+        all_data2[211:208] <= rxdata[3:0];   // Store lower 4 bits (bits 208-211)
+        all_data2[215:212] <= rxdata[7:4];   // Store upper 4 bits (bits 212-215)
+    end
+    77: begin
+        all_data2[219:216] <= rxdata[3:0];   // Store lower 4 bits (bits 216-219)
+        all_data2[223:220] <= rxdata[7:4];   // Store upper 4 bits (bits 220-223)
+    end
+    78: begin
+        all_data2[227:224] <= rxdata[3:0];   // Store lower 4 bits (bits 224-227)
+        all_data2[231:228] <= rxdata[7:4];   // Store upper 4 bits (bits 228-231)
+    end
+    79: begin
+        all_data2[235:232] <= rxdata[3:0];   // Store lower 4 bits (bits 232-235)
+        all_data2[239:236] <= rxdata[7:4];   // Store upper 4 bits (bits 236-239)
+    end
+    80: begin
+        all_data2[243:240] <= rxdata[3:0];   // Store lower 4 bits (bits 240-243)
+        all_data2[247:244] <= rxdata[7:4];   // Store upper 4 bits (bits 244-247)
+    end
+    81: begin
+        all_data2[251:248] <= rxdata[3:0];   // Store lower 4 bits (bits 248-251)
+        all_data2[255:252] <= rxdata[7:4];   // Store upper 4 bits (bits 252-255)
+    end
+    82: begin
+        all_data2[259:256] <= rxdata[3:0];   // Store lower 4 bits (bits 256-259)
+        all_data2[263:260] <= rxdata[7:4];   // Store upper 4 bits (bits 260-263)
+    end
+    83: begin
+        all_data2[267:264] <= rxdata[3:0];   // Store lower 4 bits (bits 264-267)
+        all_data2[271:268] <= rxdata[7:4];   // Store upper 4 bits (bits 268-271)
+    end
+    84: begin
+        all_data2[275:272] <= rxdata[3:0];   // Store lower 4 bits (bits 272-275)
+        all_data2[279:276] <= rxdata[7:4];   // Store upper 4 bits (bits 276-279)
+    end
+    85: begin
+        all_data2[283:280] <= rxdata[3:0];   // Store lower 4 bits (bits 280-283)
+        all_data2[287:284] <= rxdata[7:4];   // Store upper 4 bits (bits 284-287)
+    end
+    86: begin
+        all_data2[291:288] <= rxdata[3:0];   // Store lower 4 bits (bits 288-291)
+        all_data2[295:292] <= rxdata[7:4];   // Store upper 4 bits (bits 292-295)
+    end
+    87: begin
+        all_data2[299:296] <= rxdata[3:0];   // Store lower 4 bits (bits 296-299)
+        all_data2[303:300] <= rxdata[7:4];   // Store upper 4 bits (bits 300-303)
+    end
+    88: begin
+        all_data2[307:304] <= rxdata[3:0];   // Store lower 4 bits (bits 304-307)
+        all_data2[311:308] <= rxdata[7:4];   // Store upper 4 bits (bits 308-311)
+    end
+    89: begin
+        all_data2[315:312] <= rxdata[3:0];   // Store lower 4 bits (bits 312-315)
+        all_data2[319:316] <= rxdata[7:4];   // Store upper 4 bits (bits 316-319)
+    end
+    90: begin
+        all_data2[323:320] <= rxdata[3:0];   // Store lower 4 bits (bits 320-323)
+        all_data2[327:324] <= rxdata[7:4];   // Store upper 4 bits (bits 324-327)
+    end
+    91: begin
+        all_data2[331:328] <= rxdata[3:0];   // Store lower 4 bits (bits 328-331)
+        all_data2[335:332] <= rxdata[7:4];   // Store upper 4 bits (bits 332-335)
+    end
+    92: begin
+        all_data2[339:336] <= rxdata[3:0];   // Store lower 4 bits (bits 336-339)
+        all_data2[343:340] <= rxdata[7:4];   // Store upper 4 bits (bits 340-343)
+    end
+    93: begin
+        all_data2[347:344] <= rxdata[3:0];   // Store lower 4 bits (bits 344-347)
+        all_data2[351:348] <= rxdata[7:4];   // Store upper 4 bits (bits 348-351)
+    end
+    94: begin
+        all_data2[355:352] <= rxdata[3:0];   // Store lower 4 bits (bits 352-355)
+        all_data2[359:356] <= rxdata[7:4];   // Store upper 4 bits (bits 356-359)
+    end
+    95: begin
+        all_data2[363:360] <= rxdata[3:0];   // Store lower 4 bits (bits 360-363)
+        all_data2[367:364] <= rxdata[7:4];   // Store upper 4 bits (bits 364-367)
+    end
+    96: begin
+        all_data2[371:368] <= rxdata[3:0];   // Store lower 4 bits (bits 368-371)
+        all_data2[375:372] <= rxdata[7:4];   // Store upper 4 bits (bits 372-375)
+    end
+    97: begin
+        all_data2[379:376] <= rxdata[3:0];   // Store lower 4 bits (bits 376-379)
+        all_data2[383:380] <= rxdata[7:4];   // Store upper 4 bits (bits 380-383)
+    end
+    98: begin
+        all_data2[387:384] <= rxdata[3:0];   // Store lower 4 bits (bits 384-387)
+        all_data2[391:388] <= rxdata[7:4];   // Store upper 4 bits (bits 388-391)
+    end
+    99: begin
+        all_data2[395:392] <= rxdata[3:0];   // Store lower 4 bits (bits 392-395)
+        all_data2[399:396] <= rxdata[7:4];   // Store upper 4 bits (bits 396-399)
+    end
+endcase
+
+				
+                
+           
+
+            // Increment byte counter
+            byte_count1 <= byte_count1 + 1;
+
+            // Reset or finish once 4 bytes are received
+            if (byte_count1 == 100) begin
+              byte_count1 <= 0;  // Reset counter after all 4 bytes are stored
+				  all_done<=1'b1;
+            end
+				
+				
+			
+            state <= IDLE;
+          end
+        end
+
+        default: state <= IDLE;
+      endcase
+    end
+  end
+
+endmodule

@@ -1,0 +1,18 @@
+
+
+## Clock signal
+NET "clk"            LOC = "V10" | IOSTANDARD = "LVCMOS33";   
+Net "clk" TNM_NET = sys_clk_pin;
+TIMESPEC TS_sys_clk_pin = PERIOD sys_clk_pin 100000 kHz;
+NET "rst" LOC = "C9" | IOSTANDARD = "LVCMOS33";
+NET "button" LOC  = "C4";
+
+//NET "done" LOC = "U16" | IOSTANDARD = LVCMOS33;
+## Usb-RS232 interface
+NET "rx"           LOC = "N17" | IOSTANDARD = "LVCMOS33";   #Bank = 1, Pin name = IO_L48P_HDC_M1DQ8,                 Sch name = MCU-RX
+NET "tx"           LOC = "N18" | IOSTANDARD = "LVCMOS33";  // Bank = 1, Pin name = IO_L48P_HDC_M1DQ8,                 Sch name = MCU-RX
+
+## Leds
+NET "matrix_done"  LOC = "U16" | IOSTANDARD = "LVCMOS33";  # LED 0
+NET "enable"          LOC = "T5"  | IOSTANDARD = "LVCMOS33";   #Bank = MISC, Pin name = IO_L48N_RDWR_B_VREF_2,          Sch name = SW7
+

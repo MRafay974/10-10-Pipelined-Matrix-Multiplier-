@@ -1,0 +1,67 @@
+module top_module (
+  input  clk,                  // System clock (100 MHz)
+  input  rst,                  // Reset signal
+  input  rx,                   // UART RX input (from PC)
+  output  tx,                  // UART TX output (to PC)
+  output  done,                // Done signal indicating transmission is complete
+  input  enable,
+  input  button,
+  
+  output  matrix_done          // Done signal for matrix multiplication
+);
+   wire  [7:0] rxdata;   
+   wire [399:0] all_data1;    // Full 32-bit received data storage 1
+   wire [399:0] all_data2;    // Full 32-bit received data storage 2
+   wire  [399:0] C;
+  
+
+
+
+
+
+  // Instantiate the UART receiver module (uartrx) to receive data from the PC
+  uartrx uartrx_inst (
+    .clk(clk),           // System clock
+    .rst(rst),            // Reset signal
+    .rx(rx),              // UART RX input (from PC)
+    .done(done), 
+     .all_done(all_done),              	 // all_Done signal indicating reception is complete
+    .rxdata(rxdata),      // Received data byte from UART
+    .all_data1(all_data1),// Full 32-bit data storage 1
+    .all_data2(all_data2) // Full 32-bit data storage 2
+  );
+
+  
+
+
+  // Instantiate the matrix multiplication module
+  matrix_mult_10 matrix_mult_inst (
+    .Clock(clk),          // System clock
+    .reset(rst),          // Reset signal
+    .Enable(enable),        // Enable when UART reception is done
+    .A(all_data1),  // Lower 27 bits of all_data1 as matrix A input
+    .B(all_data2),  // Lower 27 bits of all_data2 as matrix B input
+	 .C(C),
+    .done(matrix_done)    // Done signal for matrix multiplication
+  );
+  
+  
+    wire button_out;
+	 
+	 // Instantiate the button module to debounce the button input
+    button button_inst (
+        .clk(clk),        // Connect the system clock
+        .in(button),   // Connect the raw button input
+       .out(button_out)      // Connect the debounced output to the button signal
+    );
+  
+  transmitter transmitter_inst (
+    .clk(clk),             // System clock
+   .rst(rst),             // Reset signal
+   .switch_data(C),  // Send the least significant 8 bits of C
+   .button(button_out),       // Button signal to trigger transmission
+   .tx_out(tx),       // Serial data output (TX pin)
+   .busy(busy)            // Indicates transmitter is busy
+ );
+
+endmodule

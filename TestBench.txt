@@ -1,0 +1,2079 @@
+
+
+
+`timescale 1ns / 1ps
+
+module tb_top_module();
+
+    // Testbench Signals
+    reg clk;
+    reg rst;
+    reg rx;                            // UART RX line
+    reg button;                         // Button signal
+    reg enable;                         // Enable for matrix multiplication
+    wire done;                          // UART reception done
+  //  wire [71:0] C;                      // Matrix multiplication result
+    wire matrix_done;                   // Matrix multiplication done
+    wire tx;                            // UART TX line
+
+    // Instantiate the top_module
+    top_module uut (
+        .clk(clk),
+        .rst(rst),
+        .rx(rx),
+        .tx(tx),
+        .done(done),
+        .enable(enable),
+        .button(button),
+     //   .C(C),
+        .matrix_done(matrix_done)
+    );
+
+    // Clock generation
+    initial begin
+        clk = 0;
+        forever #5 clk = ~clk;  // 100 MHz clock -> 10ns period (5ns half period)
+    end
+   
+
+    // Stimulus Sequence
+    initial begin
+      
+		
+		     // Initialize signals
+    rst = 1;
+   // rx = 1;  // Idle state for RX line (High)
+    #100;
+	 
+	
+
+    rst = 0;
+	 
+	 
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("1st byte");
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("2nd byte");
+		  
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+  // Wait for UART reception to complete
+        wait(done == 1);
+        $display("3rd byte of Matrix A");
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("4th byte of Matrix A");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("5th byte of Matrix A");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("6th byte of Matrix A");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("7th byte of Matrix A");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("8th byte of Matrix A");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("9th byte of Matrix A");
+
+     
+      
+	////////////////////////////////////////////////////////////////
+		
+	
+
+      @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("1st byte");
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("2nd byte");
+		  
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+  // Wait for UART reception to complete
+        wait(done == 1);
+        $display("3rd byte of Matrix B");
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("4th byte of Matrix B");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("5th byte of Matrix B");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("6th byte of Matrix B");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("7th byte of Matrix B");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("8th byte of Matrix B");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("9th byte of Matrix A");
+
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("1st byte");
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("2nd byte");
+		  
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+  // Wait for UART reception to complete
+        wait(done == 1);
+        $display("3rd byte of Matrix A");
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("4th byte of Matrix A");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("5th byte of Matrix A");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("6th byte of Matrix A");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("7th byte of Matrix A");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("8th byte of Matrix A");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("9th byte of Matrix A");
+
+     
+      
+	////////////////////////////////////////////////////////////////
+		
+	
+
+      @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("1st byte");
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("2nd byte");
+		  
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+  // Wait for UART reception to complete
+        wait(done == 1);
+        $display("3rd byte of Matrix B");
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("4th byte of Matrix B");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("5th byte of Matrix B");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("6th byte of Matrix B");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("7th byte of Matrix B");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("8th byte of Matrix B");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("9th byte of Matrix B");
+
+
+
+
+/////////////////////////////////////////////////////////
+
+
+      @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("1st byte");
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("2nd byte");
+		  
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+  // Wait for UART reception to complete
+        wait(done == 1);
+        $display("3rd byte of Matrix B");
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("4th byte of Matrix B");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("5th byte of Matrix B");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("6th byte of Matrix B");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("7th byte of Matrix B");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("8th byte of Matrix B");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("9th byte of Matrix B");
+
+
+///////////////////////////////////
+
+
+
+      @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("1st byte");
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("2nd byte");
+		  
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+  // Wait for UART reception to complete
+        wait(done == 1);
+        $display("3rd byte of Matrix B");
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("4th byte of Matrix B");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("5th byte of Matrix B");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("6th byte of Matrix B");
+
+/////////////////////////////////////                  ///////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("1st byte");
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("2nd byte");
+		  
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+  // Wait for UART reception to complete
+        wait(done == 1);
+        $display("3rd byte of Matrix A");
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("4th byte of Matrix A");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("5th byte of Matrix A");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("6th byte of Matrix A");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("7th byte of Matrix A");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("8th byte of Matrix A");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("9th byte of Matrix A");
+
+     
+      
+	////////////////////////////////////////////////////////////////
+		
+	
+
+      @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("1st byte");
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("2nd byte");
+		  
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+  // Wait for UART reception to complete
+        wait(done == 1);
+        $display("3rd byte of Matrix B");
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("4th byte of Matrix B");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("5th byte of Matrix B");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("6th byte of Matrix B");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("7th byte of Matrix B");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("8th byte of Matrix B");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("9th byte of Matrix A");
+
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("1st byte");
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("2nd byte");
+		  
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+  // Wait for UART reception to complete
+        wait(done == 1);
+        $display("3rd byte of Matrix A");
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("4th byte of Matrix A");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("5th byte of Matrix A");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("6th byte of Matrix A");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("7th byte of Matrix A");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("8th byte of Matrix A");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("9th byte of Matrix A");
+
+     
+      
+	////////////////////////////////////////////////////////////////
+		
+	
+
+      @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("1st byte");
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("2nd byte");
+		  
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+  // Wait for UART reception to complete
+        wait(done == 1);
+        $display("3rd byte of Matrix B");
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("4th byte of Matrix B");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("5th byte of Matrix B");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("6th byte of Matrix B");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("7th byte of Matrix B");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("8th byte of Matrix B");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("9th byte of Matrix B");
+
+
+
+
+/////////////////////////////////////////////////////////
+
+
+      @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("1st byte");
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("2nd byte");
+		  
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+  // Wait for UART reception to complete
+        wait(done == 1);
+        $display("3rd byte of Matrix B");
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("4th byte of Matrix B");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("5th byte of Matrix B");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("6th byte of Matrix B");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("7th byte of Matrix B");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("8th byte of Matrix B");
+
+
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("9th byte of Matrix B");
+
+
+///////////////////////////////////
+
+
+
+      @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("1st byte");
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("2nd byte");
+		  
+		  
+		  
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+  // Wait for UART reception to complete
+        wait(done == 1);
+        $display("3rd byte of Matrix B");
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("4th byte of Matrix B");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("5th byte of Matrix B");
+
+
+
+    @(posedge clk); rx = 0;  // Start bit
+    @(posedge clk); rx = 1;  // Bit 0
+    @(posedge clk); rx = 0;  // Bit 1
+    @(posedge clk); rx = 0;  // Bit 2
+    @(posedge clk); rx = 0;  // Bit 3
+    @(posedge clk); rx = 1;  // Bit 4
+    @(posedge clk); rx = 0;  // Bit 5
+    @(posedge clk); rx = 0;  // Bit 6
+    @(posedge clk); rx = 0;  // Bit 7
+    @(posedge clk); rx = 1;  // Stop bit
+
+
+     
+        // Wait for UART reception to complete
+        wait(done == 1);
+        $display("6th byte of Matrix B");
+
+
+     
+	   @(posedge clk);
+		 @(posedge clk);
+		  @(posedge clk);
+		   @(posedge clk);
+	  enable=1;
+	    
+
+       
+        wait(matrix_done == 1);
+        $display("Matrix Multiplication Complete");
+
+      //  $display("Result C: %h", C);
+
+        // Finish Simulation
+        #10000;
+        $stop;
+    end
+
+   
+
+endmodule
+
+
+

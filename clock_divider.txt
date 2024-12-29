@@ -1,0 +1,26 @@
+
+
+module clk_divider(
+    input wire clk_in,    // Input clock
+    input wire rst,       // Reset signal
+    output reg clk_out    // Output divided clock
+);
+    parameter DIV_FACTOR = 1000000;  // Change this value to divide the clock by a specific factor
+
+    reg [31:0] count;
+
+    always @(posedge clk_in or posedge rst) begin
+        if (rst) begin
+            count <= 32'd0;
+            clk_out <= 1'b0;
+        end else begin
+            if (count == ((DIV_FACTOR/2) - 1)) begin
+                count <= 32'd0;
+                clk_out <= ~clk_out;  // Toggle the output clock
+            end else begin
+                count <= count + 1;
+            end
+        end
+    end
+endmodule
+

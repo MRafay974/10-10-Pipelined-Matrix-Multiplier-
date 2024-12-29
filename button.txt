@@ -1,0 +1,28 @@
+
+
+module button(
+input clk, in,
+output out
+);
+reg r1, r2, r3;
+
+wire bclk;
+
+// Instantiate the baud rate generator
+  br #(.BAUD(9600)) u_br (
+   .clk(clk),    // Connect the system clock (100 MHz)
+   .rst(rst),    // Connect the reset signal
+    .bclk(bclk)   // Connect the output baud clock
+  );
+
+
+
+always @(posedge bclk)
+begin
+r1 <= in;
+r2 <= r1;
+r3 <= r2;
+end
+assign out = ~r3 & r2; 
+endmodule
+

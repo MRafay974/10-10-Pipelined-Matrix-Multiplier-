@@ -1,0 +1,106 @@
+
+
+module transmitter (
+    input wire clk,                // System clock
+    input wire rst,                // Reset signal
+    input wire [399:0] switch_data, // 36-bit input data (from switches)
+    input wire button,             // Button signal to trigger transmission
+    output reg tx_out,             // Serial data output (TX pin)
+    output reg busy                // Indicates transmitter is busy
+);
+
+    reg [7:0] tsr;                 // Transmitter Shift Register (8-bit for data bits)
+    reg [3:0] bit_counter;         // Counter to track transmitted bits
+    reg [5:0] data_counter;        // Counter to track which byte of switch_data to transmit
+    wire bclk;                     // Baud clock for serial communication
+
+    // Instantiate the baud rate generator (br module)
+    br #(.BAUD(9600)) u_br (
+        .clk(clk),    // Connect the system clock (100 MHz)
+        .rst(rst),    // Connect the reset signal
+        .bclk(bclk)   // Connect the output baud clock
+    );
+
+    // Transmission logic
+    always @(posedge bclk or posedge rst) begin
+        if (rst) begin
+            busy <= 1'b0;            // Not busy during reset
+            bit_counter <= 4'b0;     // Reset bit counter
+            tsr <= 8'b00000000;      // Reset Transmit Shift Register
+            data_counter <= 6'b0;    // Reset data counter
+            tx_out <= 1'b1;          // Set idle state of TX (High for idle)
+        end else begin
+            if (button && !busy) begin
+                busy <= 1'b1;            // Set busy when transmission starts
+                // Load the current 8 bits of switch_data into Transmit Shift Register (tsr)
+                case (data_counter)
+      6'd0: tsr <= switch_data[7:0];        // First 8 bits (bits 0-7)
+    6'd1: tsr <= switch_data[15:8];       // Next 8 bits (bits 8-15)
+    6'd2: tsr <= switch_data[23:16];      // Next 8 bits (bits 16-23)
+    6'd3: tsr <= switch_data[31:24];      // Next 8 bits (bits 24-31)
+    6'd4: tsr <= switch_data[39:32];      // Next 8 bits (bits 32-39)
+    6'd5: tsr <= switch_data[47:40];      // Next 8 bits (bits 40-47)
+    6'd6: tsr <= switch_data[55:48];      // Next 8 bits (bits 48-55)
+    6'd7: tsr <= switch_data[63:56];      // Next 8 bits (bits 56-63)
+    6'd8: tsr <= switch_data[71:64];      // Next 8 bits (bits 64-71)
+    6'd9: tsr <= switch_data[79:72];      // Next 8 bits (bits 72-79)
+    6'd10: tsr <= switch_data[87:80];     // Next 8 bits (bits 80-87)
+    6'd11: tsr <= switch_data[95:88];     // Next 8 bits (bits 88-95)
+    6'd12: tsr <= switch_data[103:96];    // Next 8 bits (bits 96-103)
+    6'd13: tsr <= switch_data[111:104];   // Next 8 bits (bits 104-111)
+    6'd14: tsr <= switch_data[119:112];   // Next 8 bits (bits 112-119)
+    6'd15: tsr <= switch_data[127:120];   // Next 8 bits (bits 120-127)
+    6'd16: tsr <= switch_data[135:128];   // Next 8 bits (bits 128-135)
+    6'd17: tsr <= switch_data[143:136];   // Next 8 bits (bits 136-143)
+    6'd18: tsr <= switch_data[151:144];   // Next 8 bits (bits 144-151)
+    6'd19: tsr <= switch_data[159:152];   // Next 8 bits (bits 152-159)
+    6'd20: tsr <= switch_data[167:160];   // Next 8 bits (bits 160-167)
+    6'd21: tsr <= switch_data[175:168];   // Next 8 bits (bits 168-175)
+    6'd22: tsr <= switch_data[183:176];   // Next 8 bits (bits 176-183)
+    6'd23: tsr <= switch_data[191:184];   // Next 8 bits (bits 184-191)
+    6'd24: tsr <= switch_data[199:192];   // Next 8 bits (bits 192-199)
+    6'd25: tsr <= switch_data[207:200];   // Next 8 bits (bits 200-207)
+    6'd26: tsr <= switch_data[215:208];   // Next 8 bits (bits 208-215)
+    6'd27: tsr <= switch_data[223:216];   // Next 8 bits (bits 216-223)
+    6'd28: tsr <= switch_data[231:224];   // Next 8 bits (bits 224-231)
+    6'd29: tsr <= switch_data[239:232];   // Next 8 bits (bits 232-239)
+    6'd30: tsr <= switch_data[247:240];   // Next 8 bits (bits 240-247)
+    6'd31: tsr <= switch_data[255:248];   // Next 8 bits (bits 248-255)
+    6'd32: tsr <= switch_data[263:256];   // Next 8 bits (bits 256-263)
+    6'd33: tsr <= switch_data[271:264];   // Next 8 bits (bits 264-271)
+    6'd34: tsr <= switch_data[279:272];   // Next 8 bits (bits 272-279)
+    6'd35: tsr <= switch_data[287:280];   // Next 8 bits (bits 280-287)
+    6'd36: tsr <= switch_data[295:288];   // Next 8 bits (bits 288-295)
+    6'd37: tsr <= switch_data[303:296];   // Next 8 bits (bits 296-303)
+    6'd38: tsr <= switch_data[311:304];   // Next 8 bits (bits 304-311)
+    6'd39: tsr <= switch_data[319:312];   // Next 8 bits (bits 312-319)
+    6'd40: tsr <= switch_data[327:320];   // Next 8 bits (bits 320-327)
+    6'd41: tsr <= switch_data[335:328];   // Next 8 bits (bits 328-335)
+    6'd42: tsr <= switch_data[343:336];   // Next 8 bits (bits 336-343)
+    6'd43: tsr <= switch_data[351:344];   // Next 8 bits (bits 344-351)
+    6'd44: tsr <= switch_data[359:352];   // Next 8 bits (bits 352-359)
+    6'd45: tsr <= switch_data[367:360];   // Next 8 bits (bits 360-367)
+    6'd46: tsr <= switch_data[375:368];   // Next 8 bits (bits 368-375)
+    6'd47: tsr <= switch_data[383:376];   // Next 8 bits (bits 376-383)
+    6'd48: tsr <= switch_data[391:384];   // Next 8 bits (bits 384-391)
+    6'd49: tsr <= switch_data[399:392];   // Last 8 bits (bits 392-399)
+    default: tsr <= 8'b0;                 // Default case
+                endcase
+                bit_counter <= 4'b0;     // Reset bit counter
+                tx_out <= 1'b0;          // Transmit start bit (Low)
+            end else if (busy) begin
+                if (bit_counter < 8) begin
+                    tx_out <= tsr[0];  // Transmit LSB first
+                    tsr <= tsr >> 1;    // Shift TSR to the right
+                    bit_counter <= bit_counter + 1;
+                end else begin
+                    tx_out <= 1'b1;    // Transmit stop bit (High)
+                    busy <= 1'b0;      // Stop transmission after the stop bit
+                    // Move to the next 8-bit chunk
+                    data_counter <= data_counter + 1;
+                end
+            end
+        end
+    end
+
+endmodule
